@@ -1,0 +1,33 @@
+<!-- templates/archivos.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebCraft - Archivos</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>📂 {{ carrera | capitalize }} - {{ semestre }}° Semestre - {{ materia }}</h2>
+
+    <h3>Subir nuevo archivo:</h3>
+    <form action="/subir" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="carrera" value="{{ carrera }}">
+      <input type="hidden" name="semestre" value="{{ semestre }}">
+      <input type="hidden" name="materia" value="{{ materia }}">
+      <input type="file" name="archivo" required>
+      <button type="submit">Subir 📤</button>
+    </form>
+
+    <h3>Archivos disponibles:</h3>
+    <ul>
+      {% for archivo in archivos %}
+        <li><a href="/descargar/{{ archivo }}?carrera={{ carrera }}&semestre={{ semestre }}&materia={{ materia }}" target="_blank">📄 {{ archivo }}</a></li>
+      {% else %}
+        <p>No hay archivos disponibles.</p>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>

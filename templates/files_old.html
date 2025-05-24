@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebCraft - File Uploads</title>
+    <style>
+        body { font-family: Arial; padding: 2rem; background: #f4f4f4; }
+        .container { max-width: 700px; margin: auto; background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
+        input[type="file"] { margin: 10px 0; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin-bottom: 10px; }
+        a.download-link {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a.download-link:hover {
+            text-decoration: underline;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            transition: background 0.2s ease;
+        }
+        .back-btn:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Dashboard</a>
+
+        <h1>📁 File Upload & Download</h1>
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <button type="submit">Upload</button>
+        </form>
+        <hr>
+        <h2>Available Files:</h2>
+        <ul>
+            {% for file in files %}
+            <li>
+                {{ file }} — <a class="download-link" href="{{ url_for('uploaded_file', filename=file) }}" download>Download</a>
+            </li>
+            {% else %}
+            <li>No files yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

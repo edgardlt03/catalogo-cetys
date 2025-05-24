@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebCraft - Materia</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>📘 {{ carrera | capitalize }} - {{ semestre }}° Semestre</h2>
+    <p>Selecciona una materia:</p>
+
+    <form action="/archivos" method="get">
+      <input type="hidden" name="carrera" value="{{ carrera }}">
+      <input type="hidden" name="semestre" value="{{ semestre }}">
+      
+      <select name="materia" required>
+        <option value="">-- Elige una materia --</option>
+        {% for materia in materias %}
+          <option value="{{ materia }}">{{ materia }}</option>
+        {% endfor %}
+      </select>
+
+      <br><br>
+      <button type="submit">Ver archivos 📁</button>
+    </form>
+  </div>
+</body>
+</html>

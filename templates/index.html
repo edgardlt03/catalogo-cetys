@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo CETYS - Inicio</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📚 Bienvenido a Catálogo CETYS</h1>
+    <p>Selecciona la carrera para comenzar:</p>
+
+    <form action="/semestre" method="get">
+      <div class="custom-select">
+        <select name="carrera" required>
+          <option value="">-- Elige una carrera --</option>
+          <option value="computacion">Ingeniería en Computación</option>
+          <option value="industrial">Ingeniería Industrial</option>
+          <option value="derecho">Licenciatura en Derecho</option>
+          <option value="administracion">Licenciatura en Administración</option>
+        </select>
+      </div>
+      <button type="submit">Continuar ➡️</button>
+    </form>
+  </div>
+</body>
+</html>
