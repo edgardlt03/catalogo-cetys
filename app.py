@@ -1,22 +1,68 @@
-from flask import Flask, render_template, request, redirect, send_from_directory, url_for
-from video.stream import video_bp
+from flask import Flask, render_template, request, redirect, send_from_directory, url_for, session
 import os
 import config
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = config.UPLOAD_FOLDER
-
-#app.register_blueprint(video_bp)
-
 UPLOAD_BASE = "uploads"
+app.secret_key = "clave_super_secreta"  # cámbiala en producción
 
+# --- FUNCIÓN PARA ENVIAR CORREO ---
+def enviar_correo(destinatario):
+    remitente = "juan.lupe.sacame@gmail.com"  # ✅ CAMBIA ESTO
+    contraseña = "fimy fuee pbzq hqfu"         # ✅ CONTRASEÑA DE APLICACIÓN
+
+    asunto = "Gracias por entrar a CETYSCatálogo"
+    cuerpo = "Hola, gracias por visitar CETYSCatálogo. ¡Esperamos que te sea útil!"
+
+    msg = MIMEMultipart()
+    msg["From"] = remitente
+    msg["To"] = destinatario
+    msg["Subject"] = asunto
+    msg.attach(MIMEText(cuerpo, "plain"))
+
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(remitente, contraseña)
+        server.send_message(msg)
+        server.quit()
+        print("✅ Correo enviado a", destinatario)
+    except Exception as e:
+        print("❌ Error enviando correo:", e)
+
+# --- RUTA DE REGISTRO ---
+@app.route('/registro', methods=["GET", "POST"])
+def registro():
+    if request.method == "POST":
+        correo = request.form.get("correo")
+        if correo:
+            session["correo"] = correo
+            enviar_correo(correo)
+            return redirect(url_for("index"))
+    return render_template("registro.html")
+
+# --- RUTA PARA CERRAR SESIÓN ---
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for("registro"))
+
+# --- VISTA PRINCIPAL ---
 @app.route('/')
 def index():
-    print(">>> Entraste a index.html desde:", os.path.abspath("templates/index.html"))
-    return render_template('index.html')
+ 
+    if "correo" not in session:
+        return redirect(url_for("registro"))
+    return render_template("index.html")
 
 @app.route('/semestre')
 def seleccionar_semestre():
+    if "correo" not in session:
+        return redirect(url_for("registro"))
     carrera = request.args.get("carrera")
     if not carrera:
         return redirect(url_for("index"))
@@ -24,9 +70,10 @@ def seleccionar_semestre():
 
 @app.route("/materia")
 def seleccionar_materia():
+    if "correo" not in session:
+        return redirect(url_for("registro"))
     carrera = request.args.get("carrera")
     semestre = request.args.get("semestre")
-
     if not carrera or not semestre:
         return redirect(url_for("index"))
 
@@ -42,9 +89,12 @@ def seleccionar_materia():
 
 @app.route("/archivos")
 def ver_archivos():
+    if "correo" not in session:
+        return redirect(url_for("registro"))
     carrera = request.args.get("carrera")
     semestre = request.args.get("semestre")
     materia = request.args.get("materia")
+
     ruta = os.path.join(UPLOAD_BASE, carrera, semestre, materia)
     os.makedirs(ruta, exist_ok=True)
     archivos = os.listdir(ruta)
@@ -52,6 +102,8 @@ def ver_archivos():
 
 @app.route("/subir", methods=["POST"])
 def subir_archivo():
+    if "correo" not in session:
+        return redirect(url_for("registro"))
     archivo = request.files["archivo"]
     carrera = request.form["carrera"]
     semestre = request.form["semestre"]
@@ -65,13 +117,15 @@ def subir_archivo():
 
 @app.route("/descargar/<archivo>")
 def descargar_archivo(archivo):
+    if "correo" not in session:
+        return redirect(url_for("registro"))
     carrera = request.args.get("carrera")
     semestre = request.args.get("semestre")
     materia = request.args.get("materia")
+
     ruta = os.path.join(UPLOAD_BASE, carrera, semestre, materia)
     return send_from_directory(ruta, archivo, as_attachment=True)
 
 if __name__ == '__main__':
     print(">>> Starting WebCraft...")
-    print(">>> Flask está usando templates desde:", app.template_folder)
     app.run(host='0.0.0.0', port=5050)

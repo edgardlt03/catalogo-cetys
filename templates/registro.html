@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro - Catálogo CETYS</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📧 Bienvenido al Catálogo CETYS</h1>
+    <p>Por favor, ingresa tu correo electrónico institucional para continuar:</p>
+
+    <form method="post">
+      <input 
+        type="email" 
+        name="correo" 
+        placeholder="tucorreo@cetys.mx" 
+        required 
+        style="padding: 10px; width: 100%; max-width: 300px; font-size: 16px;"
+      >
+      <br><br>
+      <button type="submit" style="padding: 10px 20px; font-size: 16px;">
+        Entrar ✅
+      </button>
+    </form>
+
+    {% if mensaje %}
+      <p style="color: green; margin-top: 20px;">{{ mensaje }}</p>
+    {% endif %}
+  </div>
+</body>
+</html>
