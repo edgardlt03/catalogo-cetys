@@ -4,6 +4,20 @@
   <meta charset="UTF-8">
   <title>Registro - Catálogo CETYS</title>
   <link rel="stylesheet" href="/static/style.css">
+  <style>
+    .video-container {
+      max-width: 640px;
+      margin: 30px auto 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -27,6 +41,14 @@
     {% if mensaje %}
       <p style="color: green; margin-top: 20px;">{{ mensaje }}</p>
     {% endif %}
+
+    <!-- VIDEO ABAJO -->
+    <div class="video-container">
+      <video autoplay muted loop>
+        <source src="/static/video/cetys_cambia_el_mundo.mp4" type="video/mp4">
+        Tu navegador no soporta el video.
+      </video>
+    </div>
   </div>
 </body>
 </html>
